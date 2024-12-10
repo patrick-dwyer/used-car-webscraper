@@ -15,14 +15,27 @@ def subaru_calgary_scraper(dealershipName, weblink):
     # open the specified URL in the browser
     driver.get(weblink)
 
+    #scroll to bottom of page
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    
+    #give time for page to load
+    time.sleep(1)
+
+    #find all vehicle products
     products = driver.find_elements(By.CLASS_NAME, "vehicle-card")
 
+    #list to store vehicle objects
     scraped_data = []
 
-    dealer = Dealer(name=dealershipName, location='123 Calgary NE', inventory=[])
+    address = driver.find_elements(By.CLASS_NAME, 'footer__address')
+    for i in address:
+        print(i.text)
+
+    #dealership info
+    dealer = Dealer(name=dealershipName, location=address, inventory=[])
 
     for product in products:
-        print("__________________________________")
+        # print("__________________________________")
         output = product.text
         output_clean = output.replace('\n',' ')
         output_clean_parsed = output_clean.split(" ")
@@ -47,8 +60,9 @@ def subaru_calgary_scraper(dealershipName, weblink):
         transmission = specs_list[2]
 
         vehicle = Inventory(make=make, model=model, trim=trim, year=year, odometer=odometer, colour=colour, transmission=transmission, price=price)
-        obj_vars = vars(vehicle)
-        print(obj_vars)
+        scraped_data.append(vehicle)
+        # obj_vars = vars(vehicle)
+        # print(obj_vars)
 
         # exit()    
 
@@ -58,7 +72,10 @@ def subaru_calgary_scraper(dealershipName, weblink):
     return scraped_data
 
 # execute the scraper function and print the scraped data
-subaru_calgary_scraper('Subaru Calgary', "https://www.subarucalgary.com/vehicles/new/?st=year,desc&view=grid&sc=used")
+data = subaru_calgary_scraper('Subaru Calgary', "https://www.subarucalgary.com/vehicles/new/?st=year,desc&view=grid&sc=used")
+print(len(data))
+
+
 
 
 
