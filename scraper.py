@@ -30,7 +30,10 @@ def subaru_calgary_scraper(dealershipName, weblink):
         make = output_clean_parsed[7]
         model = output_clean_parsed[8]
         trim = output_clean_parsed[9]
-        price = output_clean_parsed[27]
+
+        #find price        
+        dollar_sign_index = output_clean_parsed.index('$')
+        price = output_clean_parsed[dollar_sign_index + 1]
         
 
         detailed_specs = product.find_elements(By.CLASS_NAME, "detailed-specs__value")
@@ -46,7 +49,8 @@ def subaru_calgary_scraper(dealershipName, weblink):
         vehicle = Inventory(make=make, model=model, trim=trim, year=year, odometer=odometer, colour=colour, transmission=transmission, price=price)
         obj_vars = vars(vehicle)
         print(obj_vars)
-        
+
+        # exit()    
 
     # close the browser
     driver.quit()
