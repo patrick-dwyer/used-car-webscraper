@@ -46,9 +46,7 @@ def subaru_calgary_scraper(dealershipName, weblink):
         vehicle = Inventory(make=make, model=model, trim=trim, year=year, odometer=odometer, colour=colour, transmission=transmission, price=price)
         obj_vars = vars(vehicle)
         print(obj_vars)
-        print(type(vehicle.price))
         
-        exit()
 
     # close the browser
     driver.quit()
