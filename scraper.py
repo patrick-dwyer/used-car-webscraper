@@ -15,11 +15,21 @@ def subaru_calgary_scraper(dealershipName, weblink):
     # open the specified URL in the browser
     driver.get(weblink)
 
-    #scroll to bottom of page
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-    
-    #give time for page to load
-    time.sleep(1)
+    # Get scroll height
+    last_height = driver.execute_script("return document.body.scrollHeight")
+
+    while True:
+        # Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Wait to load page
+        time.sleep(1)
+
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
 
     #find all vehicle products
     products = driver.find_elements(By.CLASS_NAME, "vehicle-card")
@@ -61,8 +71,8 @@ def subaru_calgary_scraper(dealershipName, weblink):
 
         vehicle = Inventory(make=make, model=model, trim=trim, year=year, odometer=odometer, colour=colour, transmission=transmission, price=price)
         scraped_data.append(vehicle)
-        # obj_vars = vars(vehicle)
-        # print(obj_vars)
+        obj_vars = vars(vehicle)
+        print(obj_vars)
 
         # exit()    
 
